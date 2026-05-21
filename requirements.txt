@@ -1,5 +1,5 @@
 streamlit==1.57.0
-streamlit-cookies-controller==0.0.4
+streamlit-cookies-controller
 requests==2.33.1
 python-dotenv==1.2.2
 
