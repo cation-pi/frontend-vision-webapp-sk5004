@@ -79,3 +79,11 @@ if st.button("📝 Daftar Sekarang", use_container_width=True):
                 age=age_val, 
                 skin_type=skin_type_val
             )
+
+            if success:
+                st.success("✅ Akun berhasil dibuat! Kamu mendapat 10 analisis gratis.")
+                st.balloons()
+                time.sleep(2)
+                st.switch_page("pages/02_login.py")
+            else:
+                st.error(msg)
