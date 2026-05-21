@@ -28,6 +28,7 @@ def init_auth_state():
 
     # jika token kosong di memori, cari di cookie
     if not st.session_state.get("access_token"):
+        token_di_cookie = None
         try:
             token_di_cookie = cookie_controller.get("access_token")
         except TypeError:
