@@ -174,17 +174,17 @@ if not edit_mode:
     </div>
     """, unsafe_allow_html=True)
 
-    if profil.get("catatan"):
-        st.markdown("<div style='margin-top:0.8rem;'></div>", unsafe_allow_html=True)
-        st.markdown(f"""
-        <div style="background:#f8faff;border-radius:10px;padding:0.9rem 1.1rem;
-                    border-left:3px solid #1a6ec8;font-size:0.91rem;color:#333;line-height:1.6;">
-            <span style="color:#888;font-size:0.8rem;">Catatan pribadi</span><br>
-            {profil['catatan']}
-        </div>
-        """, unsafe_allow_html=True)
-    elif not any([profil["nama"], profil["usia"], profil["jenis_kulit"]]):
-        st.info("Belum ada data profil. Klik **Edit** untuk mengisi.")
+    # Menangani Catatan Pribadi agar SELALU TAMPIL meskipun kosong
+    isi_catatan = profil.get("catatan") if profil.get("catatan") else "<span style='color:#9ca3af;font-style:italic;'>Belum ada catatan pribadi. Klik tombol Edit untuk menambahkan.</span>"
+    
+    st.markdown("<div style='margin-top:0.8rem;'></div>", unsafe_allow_html=True)
+    st.markdown(f"""
+    <div style="background:#f8faff;border-radius:10px;padding:0.9rem 1.1rem;
+                border-left:3px solid #1a6ec8;font-size:0.91rem;color:#333;line-height:1.6;">
+        <span style="color:#888;font-size:0.8rem;">Catatan pribadi</span><br>
+        {isi_catatan}
+    </div>
+    """, unsafe_allow_html=True)
 
 # ── EDIT MODE (Formulir ke Backend)
 else:
@@ -232,3 +232,5 @@ st.markdown("---")
 if st.button("🚪 Logout", use_container_width=True):
     logout_user()
     st.rerun()
+
+st.info("ℹ️ Semua data hanya ada selama sesi berlangsung dan otomatis hilang saat browser ditutup.")
