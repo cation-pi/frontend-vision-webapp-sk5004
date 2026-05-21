@@ -6,8 +6,8 @@ from services.api_client import login, register, get_billing_info
 
 cookie_controller = CookieController()
 
-# feature flag dari OS environment
-BILLING_ENABLED = os.getenv("BILLING_ENABLED", "False").lower() in ("true", "1", "t")
+# feature flag khusus konfigurasi cloud
+BILLING_ENABLED = st.secrets.get("BILLING_ENABLED", "False").lower() in ("true", "1", "t")
 
 def refresh_billing_state():
     """Memperbarui data kuota di session state jika fitur billing aktif."""

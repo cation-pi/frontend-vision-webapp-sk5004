@@ -64,7 +64,8 @@ if st.button("📝 Daftar Sekarang", use_container_width=True):
             # Konversi usia ke integer secara aman sebelum dikirim
             age_val = None
             try:
-                age_val = int(usia) if status_job else None
+                if usia:
+                    age_val = int(usia)
             except ValueError:
                 pass
             
