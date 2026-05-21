@@ -1,9 +1,12 @@
 import streamlit as st
 from collections import Counter
 from datetime import datetime
-from components.ui_components import apply_global_styles
 
-# Helper function untuk age
+# Import dari api_client dan auth_state
+from services.api_client import get_current_user, update_user_profile, get_user_history
+from session.auth_state import logout_user
+
+# Helper function untuk usia
 def parse_age(value):
     try:
         age = int(value)
@@ -11,11 +14,12 @@ def parse_age(value):
     except (TypeError, ValueError):
         return None
 
-# Import dari api_client.py
-from services.api_client import get_current_user, update_user_profile, get_user_history
-
 st.set_page_config(page_title="Profil", page_icon="👤", layout="centered")
+
+# --- KITA MATIKAN CSS SIDEBAR YANG MERUSAK INFO TAGIHAN ---
+from components.ui_components import apply_global_styles
 apply_global_styles() 
+# ---------------------------------------------------------
 
 # ── HEADER
 st.markdown("""
@@ -34,7 +38,6 @@ if not token:
 
 # ── 2. FETCHING DATA: Ambil Profil & Riwayat Aktual dari Database
 with st.spinner("Menyiapkan ruang kerjamu..."):
-    # Ambil Profil
     if "profil_fetched" not in st.session_state:
         try:
             current_user_data = get_current_user(token)
@@ -49,7 +52,6 @@ with st.spinner("Menyiapkan ruang kerjamu..."):
             st.error(f"❌ Gagal mengambil profil: {str(e)}")
             st.stop()
     
-    # Ambil Riwayat untuk Statistik
     try:
         history_data = get_user_history(token)
     except:
@@ -77,17 +79,14 @@ st.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
-# ── 4. UI: RINGKASAN AKTIVITAS (Berdasarkan Data Asli)
+# ── 4. UI: RINGKASAN AKTIVITAS
 if jumlah_scan > 0:
-    # Filter hanya job yang sukses untuk dihitung statistiknya
     succeeded_scans = [item for item in history_data if item.get("status") == "succeeded"]
     
     if succeeded_scans:
         labels = [item.get("top_prediction", "Unknown").capitalize() for item in succeeded_scans]
         label_counts = Counter(labels)
         top_label = label_counts.most_common(1)[0][0]
-        
-        # Ambil waktu dari item pertama (asumsi backend mengirim data terbaru di urutan pertama)
         tanggal_raw = succeeded_scans[0].get("created_at", "-")
         try:
             dt = datetime.fromisoformat(tanggal_raw.replace('Z', '+00:00'))
@@ -126,7 +125,6 @@ if jumlah_scan > 0:
         </div>
         """, unsafe_allow_html=True)
 
-    # Distribusi hasil
     if label_counts:
         st.markdown("<br>", unsafe_allow_html=True)
         st.markdown("**Distribusi hasil deteksi (yang berhasil diproses):**")
@@ -135,8 +133,6 @@ if jumlah_scan > 0:
             pct = count / total_succeeded
             st.write(f"**{label}** — {count}x ({pct*100:.0f}%)")
             st.progress(pct)
-
-    st.markdown("---")
 
 # ══════════════════════════════════════════════════════
 # ── 5. INFORMASI PRIBADI (VIEW ATAU EDIT MODE)
@@ -216,18 +212,23 @@ else:
             }
             
             try:
-                # Mengirim data menggunakan fungsi API asli milikmu
                 update_user_profile(token, payload)
-                
-                # Mengupdate state lokal setelah sukses
                 st.session_state.profil = {
                     "nama": nama, 
                     "usia": usia, 
                     "jenis_kulit": jenis_kulit, 
                     "catatan": catatan
                 }
-                st.session_state.profil_edit_mode = False # Tutup form
+                st.session_state.profil_edit_mode = False
                 st.success("✅ Profil berhasil disimpan permanen!")
-                st.rerun() # Refresh agar kembali ke View Mode
+                st.rerun() 
             except Exception as e:
                 st.error(f"❌ Gagal menyimpan profil: {str(e)}")
+
+# ══════════════════════════════════════════════════════
+# ── 6. LOGOUT & FOOTER (MENGGUNAKAN FUNGSI ASLIMU)
+# ══════════════════════════════════════════════════════
+st.markdown("---")
+if st.button("🚪 Logout", use_container_width=True):
+    logout_user()
+    st.rerun()
