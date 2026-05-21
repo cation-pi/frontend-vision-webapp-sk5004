@@ -29,12 +29,18 @@ def login(email, password):
     response.raise_for_status()
     return response.json()
 
-def register(nama, email, password):
+def register(nama, email, password, age=None, skin_type=None):
     """
-    mendaftarkan user baru.
+    mendaftarkan user baru dengan mengirimkan payload lengkap ke FastAPI.
     """
     url = f"{api_base_url}/auth/register"
-    payload = {"nama": nama, "email": email, "password": password}
+    payload = {
+        "nama": nama, 
+        "email": email, 
+        "password": password,
+        "age": age,            # Menggunakan penamaan skema backend
+        "skin_type": skin_type   # Menggunakan penamaan skema backend
+    }
     
     response = requests.post(url, json=payload, timeout=10)
     response.raise_for_status()

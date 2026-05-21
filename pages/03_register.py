@@ -61,14 +61,20 @@ if st.button("📝 Daftar Sekarang", use_container_width=True):
         st.warning("Password dan konfirmasi password tidak cocok. Silakan periksa kembali.")
     else:
         with st.spinner("Mengirim data ke server..."):
-            # PERHATIAN: Payload backend saat ini hanya menerima (nama, email, password).
-            # usia dan jenis_kulit ditahan dulu di UI sampai skema database FastAPI di-update.
-            success, msg = register_user(nama, email, password)
+            # Konversi usia ke integer secara aman sebelum dikirim
+            age_val = None
+            try:
+                age_val = int(usia) if status_job else None
+            except ValueError:
+                pass
             
-            if success:
-                st.success("✅ Akun berhasil dibuat! Kamu mendapat 10 analisis gratis.")
-                st.balloons()
-                time.sleep(2)
-                st.switch_page("pages/02_login.py")
-            else:
-                st.error(msg)
+            skin_type_val = jenis_kulit if jenis_kulit else None
+            
+            # Oper parameter tambahan ke register_user
+            success, msg = register_user(
+                nama=nama, 
+                email=email, 
+                password=password, 
+                age=age_val, 
+                skin_type=skin_type_val
+            )

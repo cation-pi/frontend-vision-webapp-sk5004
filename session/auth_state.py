@@ -94,12 +94,13 @@ def authenticate_user(email, password):
         logout_user()
         return False, "Gagal login. Kredensial salah atau server gangguan."
 
-def register_user(nama, email, password):
+def register_user(nama, email, password, age=None, skin_type=None):
     """
-    menangani pendaftaran pengguna baru.
+    menangani pendaftaran pengguna baru dengan metadata tambahan.
     """
     try:
-        register(nama, email, password)
+        # Teruskan argumen age dan skin_type ke fungsi API client
+        register(nama, email, password, age, skin_type)
         return True, "Registrasi berhasil. Silakan login."
     except Exception as e:
         return False, f"Registrasi gagal. Email mungkin sudah terdaftar."
