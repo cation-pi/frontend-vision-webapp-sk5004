@@ -114,12 +114,16 @@ def logout_user():
     menghapus token aktif dari browser dan menyapu bersih state spesifik.
     """
     # 1. Timpa token dengan string kosong terlebih dahulu
-    cookie_controller.set("access_token", "")
-    time.sleep(0.1)
-    
-    # 2. Baru perintahkan browser untuk menghapusnya
-    cookie_controller.remove("access_token")
+    try:
+        cookie_controller.set("access_token", "")
+        time.sleep(0.1)
+        # 2. Baru perintahkan browser untuk menghapusnya
+        cookie_controller.remove("access_token")
+    except Exception:
+        pass # Redam bug bawaan dari pustaka jika cookie belum siap
 
+    st.session_state.pop("access_token", None)
+    
     # 3. Hapus HANYA data aplikasi
     keys_to_delete = [
         "access_token", 
