@@ -1,0 +1,59 @@
+# python and virtual environment
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+
+# Python tooling
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# environment variables and secrets
+.env
+.env.*
+!.env.example 
+
+# logs
+*.log
+log.txt
+
+# konfigurasi secret bawaan streamlit
+.streamlit/secrets.toml
+
+# ml and data
+*.onnx
+*.onnx.data
+*.pt
+*.pth
+*.ckpt
+*.h5
+*.pb
+*.tflite
+
+# database
+*.db
+*.sqlite3
+
+# docker volumes (local data)
+db_data/
+minio_data/
+redis_data/
+rabbitmq_data/
+
+# testing, linting and logs
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+*.log
+
+# OS and IDE specific
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

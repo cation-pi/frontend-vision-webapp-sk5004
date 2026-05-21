@@ -1,0 +1,42 @@
+# image python slim ringan berbasis linux
+FROM python:3.10-slim-bullseye
+
+# set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    STREAMLIT_SERVER_PORT=8501 \
+    STREAMLIT_SERVER_ADDRESS=0.0.0.0 \
+    STREAMLIT_SERVER_HEADLESS=true
+
+# buat direktori kerja di dalam container
+WORKDIR /app
+
+# install system dependencies (jika ada library tambahan yang butuh kompilasi c)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    curl \
+    libglib2.0-0 \
+    libgl1 \
+    && rm -rf /var/lib/apt/lists/*
+
+# copy requirements terlebih dahulu untuk memanfaatkan docker cache
+COPY requirements.txt .
+
+# install python dependencies
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
+
+# copy seluruh source code frontend ke dalam container
+COPY . .
+
+# buat user non-root untuk keamanan
+RUN useradd -m appuser && chown -R appuser /app
+USER appuser
+
+# expose port standar streamlit
+EXPOSE 8501
+
+HEALTHCHECK CMD curl --fail http://localhost:8501/_stcore/health || exit 1
+
+# command untuk menjalankan aplikasi
+CMD ["streamlit", "run", "app.py"]
