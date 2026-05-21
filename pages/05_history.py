@@ -47,18 +47,21 @@ for item in history_data:
     col_thumb, col_detail = st.columns([1, 3])
 
     with col_thumb:
-        image_url = item.get("image_url")
+        image_url = item.get("image_url") # Contoh: http://localhost:9000/bucket/img.jpg
         if image_url:
-            internal_url = image_url.replace("localhost", "minio")
+            # Gunakan URL Tailscale FastAPI milikmu
+            api_base_url = "https://cationode-ub-01.tail55d5d2.ts.net/api/v1"
+            proxy_url = f"{api_base_url}/auth/proxy-image?url={image_url}"
+            
             try:
-                response = requests.get(internal_url, timeout=5)
+                # Sekarang Streamlit meminta gambar melalui Tailscale FastAPI
+                response = requests.get(proxy_url, timeout=10)
                 if response.status_code == 200:
-                    # Streamlit akan mengubah bytes menjadi base64 yang kebal error HTTPS
                     st.image(response.content, use_container_width=True)
                 else:
-                    st.warning("⚠️ Gagal memuat gambar.")
+                    st.warning("⚠️ Gagal memuat gambar dari server.")
             except Exception as e:
-                st.error("Terputus dari MinIO.")
+                st.error("Terputus dari server API.")
         else:
             st.info("gambar tidak tersedia")
 
