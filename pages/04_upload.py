@@ -3,6 +3,7 @@ from PIL import Image
 import time
 import json
 from services.api_client import upload_image_for_prediction, get_prediction
+from session.auth_state import refresh_billing_state, BILLING_ENABLED
 from components.ui_components import apply_global_styles
 
 st.set_page_config(page_title="Upload & Deteksi", page_icon="📤", layout="centered")
@@ -25,13 +26,36 @@ if not token:
     st.error("🔒 Anda belum login atau sesi telah berakhir.")
     st.stop()
 
+# UI: STATUS KUOTA
+if BILLING_ENABLED:
+    billing = st.session_state.get("billing_info", {})
+    kuota = billing.get("remaining_quota", 0)
+    
+    token_color = "#2d8a50" if kuota > 3 else ("#e67e22" if kuota > 0 else "#c0392b")
+    st.markdown(f"""
+    <div style="background:#f0f7ff;border-radius:10px;padding:0.7rem 1.1rem;
+                margin-bottom:1rem;display:flex;align-items:center;gap:0.7rem;">
+        <span style="font-size:1.3rem;">🪙</span>
+        <span style="font-size:0.92rem;color:#333;">
+            Kuota tersisa: <b style="color:{token_color};font-size:1.05rem;">{kuota}</b>
+            {"&nbsp;— Setiap analisis berhasil memotong 1 kuota." if kuota > 0
+             else "&nbsp;— <b style='color:#c0392b;'>Kuota habis!</b> Hubungi admin untuk top-up."}
+        </span>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # Cegah user mengupload jika kuota sudah habis
+    if kuota <= 0:
+        st.error("❌ Kuota analisis kamu sudah habis. Silakan perbarui paket.")
+        st.stop()
+
 # 3. DATA: UPDATE KELAS PENYAKIT
 CLASS_DESC = {
-    "blackheads": "Bentuknya seperti bintik hitam kecil di pori-pori yang terbuka. Warna hitam itu bukan karena kotoran, tapi karena minyak yang teroksidasi.",
-    "whiteheads": "Muncul sebagai benjolan kecil berwarna putih atau mirip warna kulit. Pori-pori tertutup rapat oleh kulit.",
-    "papules": "Ini adalah jerawat yang mulai meradang. Bentuknya berupa benjolan merah dan padat yang kalau disentuh terasa nyeri atau hangat.",
-    "pustules": "Mirip seperti jerawat merah biasa, tapi di bagian tengahnya sudah ada gelembung kecil berisi nanah putih atau kekuningan.",
-    "cyst": "Jenis yang paling serius karena letaknya jauh di dalam kulit. Bentuknya besar, teksturnya lunak, dan biasanya terasa sangat sakit."
+    "blackheads": "Bentuknya seperti bintik hitam kecil di pori-pori yang terbuka. Warna hitam itu bukan karena kotoran, tapi karena minyak yang menyumbat pori berubah warna jadi gelap setelah terkena udara luar.",
+    "whiteheads": "Muncul sebagai benjolan kecil berwarna putih. Berbeda dengan blackheads, pori-pori ini tertutup rapat oleh kulit, sehingga minyak yang tersumbat tidak kena udara dan tetap putih.",
+    "papules": "Jerawat yang mulai meradang. Berupa benjolan merah dan padat yang terasa nyeri atau hangat. Ciri khasnya, jerawat ini belum punya 'mata' atau puncak nanah.",
+    "pustules": "Mirip jerawat merah biasa, tapi di bagian tengahnya sudah ada gelembung kecil berisi nanah putih/kekuningan. Tandanya tubuh sedang melawan bakteri di dalam pori-pori.",
+    "cyst": "Jenis paling serius. Letaknya jauh di dalam kulit, ukurannya besar, bertekstur lunak, dan sangat sakit. Paling sering meninggalkan bekas/bopeng."
 }
 
 # 4. UI: PANDUAN UPLOAD
@@ -43,7 +67,7 @@ st.info("""
 - Ukuran maksimal: **5 MB**
 """)
 
-uploaded_file = st.file_uploader(
+uploaded_file = st.file_uploader(# 2. SECURITY: AUTH GUARD
     "Pilih foto kulit Anda",
     type=["jpg", "jpeg", "png"],
     help="Hanya JPG, JPEG, PNG — maksimal 5 MB"
@@ -133,7 +157,19 @@ if uploaded_file is not None:
             st.stop()
 
         # 7. UI: RENDER HASIL
-        st.success("Analisis selesai dan otomatis tersimpan di database!")
+        st.success("✅ Analisis selesai dan otomatis tersimpan di database!")
+        
+        # Panggil API untuk refresh saldo kuota terbaru dari database
+        if BILLING_ENABLED:
+            refresh_billing_state()
+            kuota_baru = st.session_state.get("billing_info", {}).get("remaining_quota", 0)
+            
+            st.markdown(f"""
+            <div style="background:#fffbe6;border-radius:8px;padding:0.5rem 1rem;
+                        font-size:0.88rem;color:#7a5c00;margin-bottom:0.5rem;">
+                🪙 1 kuota digunakan. Sisa kuota: <b>{kuota_baru}</b>
+            </div>
+            """, unsafe_allow_html=True)
         st.markdown("---")
 
         st.subheader("Hasil Deteksi")

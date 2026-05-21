@@ -59,6 +59,9 @@ profil = st.session_state.profil
 jumlah_scan = len(history_data)
 nama_tampil = profil["nama"] if profil["nama"] else "Pengguna"
 
+if "profil_edit_mode" not in st.session_state:
+    st.session_state.profil_edit_mode = False
+
 # ── 3. UI: KARTU SAMBUTAN PERSONAL
 st.markdown(f"""
 <div style="background:#f0f7ff; border-radius:14px; padding:1.2rem 1.4rem; margin-bottom:1rem;
@@ -135,57 +138,96 @@ if jumlah_scan > 0:
 
     st.markdown("---")
 
-# ── 5. FORM PROFIL (Terhubung ke API)
-st.markdown("#### ✏️ Informasi Pribadi")
-st.markdown("<p style='font-size:0.88rem; color:#666; margin-bottom:0.8rem;'>"
-            "Informasi ini akan disimpan secara permanen dan otomatis disertakan sebagai metadata saat sistem AI melakukan analisis citra.</p>",
-            unsafe_allow_html=True)
-
-nama          = st.text_input("Nama", value=profil["nama"], placeholder="contoh: Andi")
-usia          = st.text_input("Usia", value=profil["usia"], placeholder="contoh: 22")
-pilihan_kulit = ["", "Normal", "Berminyak", "Kering", "Kombinasi", "Sensitif"]
-idx           = pilihan_kulit.index(profil["jenis_kulit"]) if profil["jenis_kulit"] in pilihan_kulit else 0
-jenis_kulit   = st.selectbox("Jenis Kulit (opsional)", options=pilihan_kulit, index=idx)
-catatan       = st.text_area("Catatan Tambahan (opsional)", value=profil["catatan"], 
-                             placeholder="Misal: kulit mudah kemerahan, sedang memakai krim malam dokter...", height=100)
-
-if st.button("💾 Simpan Profil", use_container_width=True):
-    with st.spinner("Menyimpan ke pangkalan data..."):
-        payload = {
-            "nama": nama,
-            "age": parse_age(usia),
-            "skin_type": jenis_kulit if jenis_kulit else None,
-            "notes": catatan if catatan else None
-        }
-        
-        try:
-            update_user_profile(token, payload)
-            
-            st.session_state.profil = {
-                "nama": nama, 
-                "usia": usia, 
-                "jenis_kulit": jenis_kulit, 
-                "catatan": catatan
-            }
-            st.success("✅ Profil berhasil disimpan permanen!")
-        except Exception as e:
-            st.error(f"❌ Gagal menyimpan profil: {str(e)}")
-
+# ══════════════════════════════════════════════════════
+# ── 5. INFORMASI PRIBADI (VIEW ATAU EDIT MODE)
+# ══════════════════════════════════════════════════════
 st.markdown("---")
+edit_mode = st.session_state.profil_edit_mode
 
-# ── 6. RENDER DATA TERSIMPAN (Dari UI FE)
-if profil["nama"] or profil["catatan"]:
-    st.markdown("#### 📋 Catatan Medis/Pribadi")
-    if profil["nama"]:
-        st.write(f"**Nama:** {profil['nama']}")
-    if profil["usia"]:
-        st.write(f"**Usia:** {profil['usia']} tahun")
-    if profil["jenis_kulit"]:
-        st.write(f"**Jenis Kulit:** {profil['jenis_kulit']}")
-    if profil["catatan"]:
+col_title, col_btn = st.columns([3, 1])
+with col_title:
+    st.markdown("#### ✏️ Informasi Pribadi")
+with col_btn:
+    if not edit_mode:
+        if st.button("✏️ Edit", use_container_width=True):
+            st.session_state.profil_edit_mode = True
+            st.rerun()
+    else:
+        if st.button("✕ Batal", use_container_width=True):
+            st.session_state.profil_edit_mode = False
+            st.rerun()
+
+# ── VIEW MODE (Hanya Tampilan Saja)
+if not edit_mode:
+    st.markdown(f"""
+    <div style="background:#f8faff;border-radius:12px;padding:1.1rem 1.3rem;line-height:2;">
+        <div style="font-size:0.88rem;color:#444;">
+            <span style="color:#888;font-size:0.8rem;">Nama</span><br>
+            <b style="color:#1a3c6e;">{profil["nama"] if profil["nama"] else "—"}</b>
+        </div>
+        <div style="border-top:0.5px solid #e0eaf5;margin:0.6rem 0;"></div>
+        <div style="font-size:0.88rem;color:#444;">
+            <span style="color:#888;font-size:0.8rem;">Usia</span><br>
+            <b style="color:#1a3c6e;">{(str(profil["usia"]) + " tahun") if profil["usia"] else "—"}</b>
+        </div>
+        <div style="border-top:0.5px solid #e0eaf5;margin:0.6rem 0;"></div>
+        <div style="font-size:0.88rem;color:#444;">
+            <span style="color:#888;font-size:0.8rem;">Jenis Kulit</span><br>
+            <b style="color:#1a3c6e;">{profil["jenis_kulit"] if profil["jenis_kulit"] else "—"}</b>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    if profil.get("catatan"):
+        st.markdown("<div style='margin-top:0.8rem;'></div>", unsafe_allow_html=True)
         st.markdown(f"""
-        <div style="background:#f8faff; border-radius:10px; padding:0.9rem 1.1rem;
-                    border-left:3px solid #1a6ec8; font-size:0.91rem; color:#333; line-height:1.6;">
-            {profil["catatan"]}
+        <div style="background:#f8faff;border-radius:10px;padding:0.9rem 1.1rem;
+                    border-left:3px solid #1a6ec8;font-size:0.91rem;color:#333;line-height:1.6;">
+            <span style="color:#888;font-size:0.8rem;">Catatan pribadi</span><br>
+            {profil['catatan']}
         </div>
         """, unsafe_allow_html=True)
+    elif not any([profil["nama"], profil["usia"], profil["jenis_kulit"]]):
+        st.info("Belum ada data profil. Klik **Edit** untuk mengisi.")
+
+# ── EDIT MODE (Formulir ke Backend)
+else:
+    st.markdown("<p style='font-size:0.88rem;color:#666;margin-bottom:0.5rem;'>"
+                "Ubah data di bawah, lalu klik <b>Simpan</b>.</p>", unsafe_allow_html=True)
+
+    nama  = st.text_input("Nama", value=profil["nama"], placeholder="contoh: Andi")
+    usia  = st.text_input("Usia", value=profil["usia"], placeholder="contoh: 22")
+
+    pilihan_kulit = ["", "Normal", "Berminyak", "Kering", "Kombinasi", "Sensitif"]
+    idx_kulit     = pilihan_kulit.index(profil["jenis_kulit"]) if profil["jenis_kulit"] in pilihan_kulit else 0
+    jenis_kulit   = st.selectbox("Jenis Kulit (opsional)", options=pilihan_kulit, index=idx_kulit)
+
+    catatan = st.text_area("Catatan pribadi (opsional)", value=profil.get("catatan", ""),
+                            placeholder="Misal: kulit mudah kemerahan, jerawat sering muncul sebelum menstruasi, dll.",
+                            height=100)
+
+    if st.button("💾 Simpan Profil", use_container_width=True, type="primary"):
+        with st.spinner("Menyimpan ke pangkalan data..."):
+            payload = {
+                "nama": nama,
+                "age": parse_age(usia),
+                "skin_type": jenis_kulit if jenis_kulit else None,
+                "notes": catatan if catatan else None
+            }
+            
+            try:
+                # Mengirim data menggunakan fungsi API asli milikmu
+                update_user_profile(token, payload)
+                
+                # Mengupdate state lokal setelah sukses
+                st.session_state.profil = {
+                    "nama": nama, 
+                    "usia": usia, 
+                    "jenis_kulit": jenis_kulit, 
+                    "catatan": catatan
+                }
+                st.session_state.profil_edit_mode = False # Tutup form
+                st.success("✅ Profil berhasil disimpan permanen!")
+                st.rerun() # Refresh agar kembali ke View Mode
+            except Exception as e:
+                st.error(f"❌ Gagal menyimpan profil: {str(e)}")
