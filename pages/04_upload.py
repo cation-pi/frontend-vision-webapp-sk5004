@@ -192,6 +192,10 @@ if uploaded_file is not None:
         sorted_scores = sorted(scores_dict.items(), key=lambda x: float(x[1]), reverse=True)
         
         for label, prob in sorted_scores:
+            # sembunyikan 'normal' dari daftar progress bar JIKA dia bukan prediksi utama
+            if label.lower() == "normal" and top_label.lower() != "normal":
+                continue
+
             st.write(f"**{label.capitalize()}** — {prob * 100:.2f}%")
             st.progress(float(prob))
 
