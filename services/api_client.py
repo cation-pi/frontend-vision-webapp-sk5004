@@ -1,6 +1,8 @@
 import os
 import streamlit as st
 import requests
+import time
+from session.auth_state import logout_user
 
 api_base_url = os.getenv("API_BASE_URL", "http://localhost:8000/api/v1")
 
@@ -16,7 +18,30 @@ def _get_headers(token: str):
         "Authorization": f"Bearer {token}"
     }
 
+# --- python decorator: otomatis me-logout user saat JWT kadaluarsa (error 401) ---
+def handle_auth_errors(func):
+    """
+    Decorator untuk mencegat error 401 dari backend
+    dan melakukan auto-logout secara elegan.
+    """
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except requests.exceptions.HTTPError as e:
+            if e.response is not None and e.response.status_code == 401:
+                st.toast("⚠️ Sesi Anda telah berakhir. Mengalihkan ke halaman login...", icon="🔒")
+                time.sleep(1.5) # Beri waktu agar pesan toast terbaca
+                
+                logout_user() # fungsi pembersih token
+                st.switch_page("pages/02_login.py")
+                st.stop() # hentikan rendering halaman saat ini
+            
+            # Jika error lain (misal 500 atau 404), biarkan errornya lewat
+            raise e
+    return wrapper
+
 # --- modul auth ---
+@handle_auth_errors
 def login(email, password):
     """
     mengirim kredensial login ke fastapi (biasanya format form-data untuk oauth2).
@@ -29,6 +54,7 @@ def login(email, password):
     response.raise_for_status()
     return response.json()
 
+@handle_auth_errors
 def register(nama, email, password, age=None, skin_type=None):
     """
     mendaftarkan user baru dengan mengirimkan payload lengkap ke FastAPI.
@@ -47,7 +73,7 @@ def register(nama, email, password, age=None, skin_type=None):
     return response.json()
 
 # --- modul prediksi & media ---
-
+@handle_auth_errors
 def upload_image_for_prediction(file_bytes, filename, token, extra_data="{}"):
     """
     mengirim gambar ke backend untuk diproses.
@@ -62,6 +88,7 @@ def upload_image_for_prediction(file_bytes, filename, token, extra_data="{}"):
     response.raise_for_status()
     return response.json()
 
+@handle_auth_errors
 def get_prediction(job_id, token):
     """
     mengambil status dan hasil prediksi menggunakan single endpoint konsisten.
@@ -75,7 +102,7 @@ def get_prediction(job_id, token):
     return response.json()
 
 # --- modul user & riwayat ---
-
+@handle_auth_errors
 def get_user_history(token):
     """
     mengambil riwayat prediksi user dari postgresql via fastapi.
