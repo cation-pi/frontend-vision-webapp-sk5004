@@ -2,7 +2,6 @@ import os
 import streamlit as st
 import requests
 import time
-from session.auth_state import logout_user
 
 api_base_url = os.getenv("API_BASE_URL", "http://localhost:8000/api/v1")
 
@@ -32,6 +31,7 @@ def handle_auth_errors(func):
                 st.toast("⚠️ Sesi Anda telah berakhir. Mengalihkan ke halaman login...", icon="🔒")
                 time.sleep(1.5) # Beri waktu agar pesan toast terbaca
                 
+                from session.auth_state import logout_user
                 logout_user() # fungsi pembersih token
                 st.switch_page("pages/02_login.py")
                 st.stop() # hentikan rendering halaman saat ini
