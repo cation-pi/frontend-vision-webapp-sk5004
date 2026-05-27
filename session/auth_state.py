@@ -2,7 +2,6 @@ import os
 import time
 import streamlit as st
 from streamlit_cookies_controller import CookieController
-from services.api_client import login, register, get_billing_info
 
 cookie_controller = CookieController()
 
@@ -14,6 +13,8 @@ def refresh_billing_state():
     if not BILLING_ENABLED:
         return
         
+    from services.api_client import get_billing_info
+    
     token = st.session_state.get("access_token")
     if token and st.session_state.get("logged_in"):
         st.session_state.billing_info = get_billing_info(token)
@@ -67,6 +68,8 @@ def authenticate_user(email, password):
     """
     menangani alur login: memanggil api, menyimpan token ke session state dan cookie.
     """
+    from services.api_client import login
+
     try:
         data = login(email, password)
         token = data.get("access_token")
@@ -102,6 +105,8 @@ def register_user(nama, email, password, age=None, skin_type=None):
     """
     menangani pendaftaran pengguna baru dengan metadata tambahan.
     """
+    from services.api_client import register
+    
     try:
         # Teruskan argumen age dan skin_type ke fungsi API client
         register(nama, email, password, age, skin_type)
