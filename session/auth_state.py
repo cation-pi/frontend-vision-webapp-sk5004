@@ -103,7 +103,7 @@ def authenticate_user(email, password):
         # return False, "Gagal login. Kredensial salah atau server gangguan."
 
         # return untuk debugging dan menangkap error asli.
-        return False, f"Gagal login karena: {type(e).__name__} - {str(e)}"
+        return False, f"Gagal login. Terdapat kendala sistem: {str(e)}"
 
 def register_user(nama, email, password, age=None, skin_type=None):
     """
