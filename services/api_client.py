@@ -95,7 +95,7 @@ def upload_image_for_prediction(file_bytes, filename, token, extra_data="{}"):
         # Tampilkan peringatan kuning di Streamlit
         st.warning(f"⚠️ {error_msg}")
         
-        return None
+        raise ValueError(error_msg)
     
     # Jika error lain (misal 500), lemparkan seperti biasa
     response.raise_for_status()
