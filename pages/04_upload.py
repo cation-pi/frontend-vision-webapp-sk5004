@@ -108,10 +108,10 @@ if uploaded_file is not None:
                 )
                 # Spinner otomatis hilang di sini
 
-                job_id = api_res.get("job_id")
-                if not job_id:
-                    st.error("❌ Gagal mendapatkan job_id dari server.")
-                    st.stop()
+            job_id = api_res.get("job_id")
+            if not job_id:
+                st.error("❌ Gagal mendapatkan job_id dari server.")
+                st.stop()
         
         except ValueError as ve:
             st.warning(f"⚠️ {str(ve)}")
