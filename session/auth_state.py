@@ -99,7 +99,11 @@ def authenticate_user(email, password):
     except Exception as e:
         # bersihkan state jika gagal
         logout_user()
-        return False, "Gagal login. Kredensial salah atau server gangguan."
+
+        # return False, "Gagal login. Kredensial salah atau server gangguan."
+
+        # return untuk debugging dan menangkap error asli.
+        return False, f"Gagal login karena: {type(e).__name__} - {str(e)}"
 
 def register_user(nama, email, password, age=None, skin_type=None):
     """
