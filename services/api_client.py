@@ -84,16 +84,13 @@ def upload_image_for_prediction(file_bytes, filename, token, extra_data="{}"):
     # data payload untuk Form() di FastAPI
     payload = {"extra_data": extra_data}
     
-    response = requests.post(url, headers=_get_headers(token), files=files, timeout=15)
+    response = requests.post(url, headers=_get_headers(token), files=files, timeout=120)
     
     # cegat error validasi wajah
     if response.status_code == 400:
         # ambil pesan asli dari OpenCV di backend
         error_data = response.json()
         error_msg = error_data.get("detail", "Gambar ditolak. Silakan unggah foto wajah yang jelas.")
-        
-        # Tampilkan peringatan kuning di Streamlit
-        st.warning(f"⚠️ {error_msg}")
         
         raise ValueError(error_msg)
     
