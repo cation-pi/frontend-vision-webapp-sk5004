@@ -96,6 +96,7 @@ if uploaded_file is not None:
         
         # 6. LOGIKA: API CALL & POLLING
         try:
+            # 1. Blok spinner hanya untuk memanggil API
             with st.spinner("Mengirim citra ke server..."):
                 # Pastikan fungsi upload_image_for_prediction di api_client.py 
                 # sudah dimodifikasi untuk menerima argument `extra_data`
@@ -105,6 +106,11 @@ if uploaded_file is not None:
                     token, 
                     extra_data=extra_data_json
                 )
+                # Spinner otomatis hilang di sini
+                # 2. Cegat jika gambar ditolak oleh OpenCV (api_res = None)
+                if api_res is None:
+                    st.stop()
+                # Lanjutkan mengambil job_id jika gambar valid
                 job_id = api_res.get("job_id")
                 if not job_id:
                     st.error("❌ Gagal mendapatkan job_id dari server.")
