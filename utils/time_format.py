@@ -1,21 +1,18 @@
 from datetime import datetime
-import pytz
+from zoneinfo import ZoneInfo
 
 def format_waktu_ke_wib(waktu_utc_string):
-    # 1. Ubah string dari API (misal: "2026-06-01T09:31:00") menjadi objek datetime
-    # Jika API mengirimkan akhiran 'Z', ganti dengan format yang dikenali
+    # 1. Parsing string (FastAPI biasanya mengirim format ISO 8601)
     if waktu_utc_string.endswith("Z"):
         waktu_utc_string = waktu_utc_string[:-1]
         
     waktu_obj = datetime.fromisoformat(waktu_utc_string)
     
-    # 2. Beritahu Python bahwa waktu ini adalah UTC
+    # 2. Tetapkan sebagai UTC
     if waktu_obj.tzinfo is None:
-        waktu_obj = waktu_obj.replace(tzinfo=pytz.UTC)
+        waktu_obj = waktu_obj.replace(tzinfo=ZoneInfo("UTC"))
         
-    # 3. Konversi ke zona waktu Asia/Jakarta (WIB)
-    wib_tz = pytz.timezone("Asia/Jakarta")
-    waktu_wib = waktu_obj.astimezone(wib_tz)
+    # 3. Konversi ke Waktu Indonesia Barat (WIB)
+    waktu_wib = waktu_obj.astimezone(ZoneInfo("Asia/Jakarta"))
     
-    # 4. Format kembali menjadi string yang cantik
     return waktu_wib.strftime("%d %b %Y, %H:%M WIB")

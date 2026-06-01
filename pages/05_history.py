@@ -67,22 +67,15 @@ for item in history_data:
             st.info("gambar tidak tersedia")
 
     with col_detail:
+        waktu = format_waktu_ke_wib(item['created_at']) if item.get('created_at') else '-'
+
         if status_job in ["succeeded"]:
             # Menggunakan key baru dari ml_engine.py
             prediksi = item.get("top_prediction", "unknown").capitalize()
             confidence = item.get("confidence", 0.0)
-            tanggal_raw = item.get("created_at", "-")
-            waktu = format_waktu_ke_wib(item['created_at']) if item.get('created_at') else '-'
-            
-            # Mempercantik format tanggal
-            try:
-                dt = datetime.fromisoformat(tanggal_raw.replace('Z', '+00:00'))
-                tanggal_str = dt.strftime("%d %b %Y, %H:%M WIB")
-            except Exception:
-                tanggal_str = tanggal_raw
 
             st.write(f"**{prediksi}** — {confidence * 100:.1f}% confidence")
-            st.write(f"🕐 {tanggal_str}  |  📄 {item.get('filename', '-')}")
+            st.write(f"🕐 {waktu}  |  📄 {item.get('filename', '-')}")
 
             with st.expander("Lihat detail & metadata"):
                 # Menampilkan JSONB extra_params
