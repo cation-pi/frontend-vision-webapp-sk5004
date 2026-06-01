@@ -3,6 +3,7 @@ import requests
 from datetime import datetime
 from components.ui_components import apply_global_styles
 from services.api_client import get_user_history 
+from utils.time_format import format_waktu_ke_wib
 
 st.set_page_config(page_title="Riwayat Deteksi", page_icon="🕘", layout="centered")
 apply_global_styles()
@@ -71,6 +72,7 @@ for item in history_data:
             prediksi = item.get("top_prediction", "unknown").capitalize()
             confidence = item.get("confidence", 0.0)
             tanggal_raw = item.get("created_at", "-")
+            waktu = format_waktu_ke_wib(item['created_at']) if item.get('created_at') else '-'
             
             # Mempercantik format tanggal
             try:
@@ -100,7 +102,7 @@ for item in history_data:
 
         elif status_job == "processing":
             st.warning("⏳ Analisis sedang diproses oleh worker di latar belakang.")
-            st.write(f"🕐 {item.get('created_at', '-')}  |  📄 {item.get('filename', '-')}")
+            st.write(f"🕐 {waktu}  |  📄 {item.get('filename', '-')}")
             
         elif status_job == "queued":
              st.info("🕒 Sedang mengantre untuk diproses.")
@@ -110,6 +112,6 @@ for item in history_data:
             st.error("❌ Analisis gagal diproses.")
             error_msg = item.get("error_message", "Kesalahan tidak diketahui")
             st.write(f"**Pesan Error:** {error_msg}")
-            st.write(f"🕐 {item.get('created_at', '-')}  |  📄 {item.get('filename', '-')}")
+            st.write(f"🕐 {waktu}  |  📄 {item.get('filename', '-')}")
 
     st.markdown("---")
