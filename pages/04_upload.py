@@ -118,7 +118,7 @@ if uploaded_file is not None:
             st.stop()
 
         except Exception as e:
-            st.error(f"❌ Gagal menghubungi server: {str(e)}")
+            st.error(f"❌ Server kami sedang sibuk atau dalam pemeliharaan. Silakan coba beberapa saat lagi.")
             st.stop()
             
         status_placeholder = st.empty()
