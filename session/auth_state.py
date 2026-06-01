@@ -3,10 +3,16 @@ import time
 import streamlit as st
 from streamlit_cookies_controller import CookieController
 
-cookie_controller = CookieController()
-
 # feature flag khusus konfigurasi cloud
 BILLING_ENABLED = st.secrets.get("BILLING_ENABLED", False)
+
+# fungsi pengambilan cookie, biar tidak disimpan sebagai variabel global -> solusi state bleeding
+def get_cookie_manager():
+    """Memastikan setiap user memiliki pengelola cookie masing-masing."""
+    from streamlit_cookies_controller import CookieController
+    if "cookie_manager" not in st.session_state:
+        st.session_state.cookie_manager = CookieController(key="user_cookies")
+    return st.session_state.cookie_manager
 
 def refresh_billing_state():
     """Memperbarui data kuota di session state jika fitur billing aktif."""
@@ -31,7 +37,12 @@ def init_auth_state():
     if not st.session_state.get("access_token"):
         token_di_cookie = None
         try:
-            token_di_cookie = cookie_controller.get("access_token")
+            token_di_cookie = None
+            try:
+                cookies = get_cookie_manager()
+                token_di_cookie = cookies.get("access_token")
+            except TypeError:
+                token_di_cookie = None
         except TypeError:
             token_di_cookie = None
         
@@ -89,7 +100,8 @@ def authenticate_user(email, password):
         
         # cookie
         if token:
-            cookie_controller.set("access_token", token)
+            cookies = get_cookie_manager()
+            cookies.set("access_token", token)
         
         # billing state
         refresh_billing_state()
@@ -124,10 +136,11 @@ def logout_user():
     """
     # 1. Timpa token dengan string kosong terlebih dahulu
     try:
-        cookie_controller.set("access_token", "")
+        cookies = get_cookie_manager()
+        cookies.set("access_token", "")
         time.sleep(0.1)
         # 2. Baru perintahkan browser untuk menghapusnya
-        cookie_controller.remove("access_token")
+        cookies.remove("access_token")
     except Exception:
         pass # Redam bug bawaan dari pustaka jika cookie belum siap
 
