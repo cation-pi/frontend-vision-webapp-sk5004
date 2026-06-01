@@ -201,7 +201,7 @@ if uploaded_file is not None:
         
         for label, prob in sorted_scores:
             # sembunyikan 'normal' dari daftar progress bar JIKA dia bukan prediksi utama
-            if label.lower() == "normal" and top_label.lower() != "normal":
+            if "normal" in label.lower() and "normal" not in top_label.lower():
                 continue
 
             st.write(f"**{label.capitalize()}** — {prob * 100:.2f}%")
