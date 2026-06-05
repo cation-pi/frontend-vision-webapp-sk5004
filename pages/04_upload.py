@@ -1,5 +1,6 @@
 import streamlit as st
-from PIL import Image
+from PIL import Image, ImageOps
+import io
 import time
 import json
 from services.api_client import upload_image_for_prediction, get_prediction
@@ -83,12 +84,16 @@ if uploaded_file is not None:
     except Exception:
         st.error("❌ File tidak dapat dibaca sebagai gambar.")
         st.stop()
-
-    st.image(image, caption="Preview foto yang diunggah", use_container_width=True)
+    
+    fixed_image = ImageOps.exif_transpose(image)
+    
+    st.image(fixed_image, caption="Preview foto yang diunggah", use_container_width=True)
     st.markdown("---")
 
     if st.button("🔍 Analisis Foto Ini", use_container_width=True):
-        image_bytes = uploaded_file.getvalue()
+        img_byte_arr = io.BytesIO()
+        fixed_image.save(img_byte_arr, format='JPEG')
+        image_bytes = img_byte_arr.getvalue()
         
         # 5. LOGIKA: PREPARE EXTRA DATA
         user_metadata = st.session_state.get("profil", {})
