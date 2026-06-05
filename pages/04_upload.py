@@ -68,19 +68,35 @@ st.info("""
 - Ukuran maksimal: **5 MB**
 """)
 
-uploaded_file = st.file_uploader(# 2. SECURITY: AUTH GUARD
-    "Pilih foto kulit Anda",
-    type=["jpg", "jpeg", "png"],
-    help="Hanya JPG, JPEG, PNG — maksimal 5 MB"
-)
+# uploaded_file = st.file_uploader(# 2. SECURITY: AUTH GUARD
+#     "Pilih foto kulit Anda",
+#     type=["jpg", "jpeg", "png"],
+#     help="Hanya JPG, JPEG, PNG — maksimal 5 MB"
+# )
 
-if uploaded_file is not None:
-    if uploaded_file.size > 5 * 1024 * 1024:
-        st.error(f"❌ Ukuran file terlalu besar ({uploaded_file.size / 1024 / 1024:.2f} MB). Maksimal 5 MB.")
+tab1, tab2 = st.tabs(["📁 Unggah dari Galeri", "📸 Ambil dengan Kamera"])
+
+with tab1:
+    uploaded_file = st.file_uploader(
+        "Pilih foto kulit Anda dari galeri",
+        type=["jpg", "jpeg", "png"],
+        help="Hanya JPG, JPEG, PNG — maksimal 5 MB"
+    )
+
+with tab2:
+    st.info("Kamera langsung di browser agar lebih stabil dan tidak reload.")
+    camera_file = st.camera_input("Foto langsung wajah Anda")
+
+# Logika OR: ambil mana saja yang diisi oleh pengguna (kamera atau galeri)
+final_file = uploaded_file or camera_file
+
+if final_file is not None:
+    if final_file.size > 5 * 1024 * 1024:
+        st.error(f"❌ Ukuran file terlalu besar ({final_file.size / 1024 / 1024:.2f} MB). Maksimal 5 MB.")
         st.stop()
 
     try:
-        image = Image.open(uploaded_file).convert("RGB")
+        image = Image.open(final_file).convert("RGB")
     except Exception:
         st.error("❌ File tidak dapat dibaca sebagai gambar.")
         st.stop()
@@ -107,7 +123,7 @@ if uploaded_file is not None:
                 # sudah dimodifikasi untuk menerima argument `extra_data`
                 api_res = upload_image_for_prediction(
                     image_bytes, 
-                    uploaded_file.name, 
+                    final_file.name, 
                     token, 
                     extra_data=extra_data_json
                 )
