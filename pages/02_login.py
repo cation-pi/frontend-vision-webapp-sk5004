@@ -16,6 +16,11 @@ if st.session_state.get("logged_in"):
     st.info("Silakan navigasi ke halaman lain melalui sidebar.")
     st.stop()
 
+# ── Tangkap pesan dari halaman Home
+if st.session_state.get("from_cta_button"):
+    st.info("💡 Silakan login terlebih dahulu untuk mulai mendeteksi jerawat.")
+    del st.session_state["from_cta_button"]
+
 # ── Header UI Acnelytics
 st.markdown("""
 <div style="background:linear-gradient(135deg,#1a6ec8,#3a9bd5);border-radius:14px;
