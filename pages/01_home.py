@@ -24,63 +24,71 @@ is_logged_in = st.session_state.get("logged_in", False)
 st.markdown("""
 <style>
 
+/* Hero Card */
 .hero-card {
     background: linear-gradient(135deg, #1a6ec8, #3a9bd5);
     border-radius: 24px;
-    padding: 3rem 2rem;
+    padding: 2.5rem 2rem 5rem 2rem;
     text-align: center;
-    margin-bottom: 1rem;
 }
 
+/* Icon */
 .hero-icon {
-    font-size: 4rem;
+    font-size: 3.5rem;
     margin-bottom: 0.5rem;
 }
 
+/* Judul */
 .hero-title {
     color: white;
     font-size: 3rem;
     font-weight: 700;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
 }
 
+/* Deskripsi */
 .hero-desc {
     color: #dcefff;
-    font-size: 1.2rem;
+    font-size: 1.15rem;
     line-height: 1.8;
     max-width: 650px;
-    margin: 0 auto;
+    margin: auto;
 }
 
-/* Pusatkan tombol */
+/* Tombol */
 div.stButton {
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    margin-top: -3rem;   /* tarik masuk ke card */
 }
 
-/* Style tombol */
 div.stButton > button {
-    border-radius: 999px;
-    background-color: white;
+    background: white;
     color: #1a6ec8;
     border: none;
-    font-weight: 600;
+    border-radius: 999px;
     padding: 0.7rem 2rem;
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     width: auto;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
 }
 
 div.stButton > button:hover {
-    background-color: #f5f9ff;
+    background: #f7fbff;
+    color: #155ca8;
 }
 
 </style>
 """, unsafe_allow_html=True)
 
-# Card
 st.markdown("""
 <div class="hero-card">
     <div class="hero-icon">🔬</div>
-    <div class="hero-title">Skin Detect</div>
+
+    <div class="hero-title">
+        Acnelytics
+    </div>
+
     <div class="hero-desc">
         Upload foto jerawatmu, dan AI kami akan membantu
         mengidentifikasi jenisnya dalam hitungan detik.
@@ -88,12 +96,15 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-if st.button("📥 Mulai Deteksi", use_container_width=False):
-    if is_logged_in:
-        st.switch_page("pages/04_upload.py")
-    else:
-        st.session_state["from_cta_button"] = True
-        st.switch_page("pages/02_login.py")
+left, center, right = st.columns([1, 2, 1])
+
+with center:
+    if st.button("📤 Mulai Deteksi"):
+        if is_logged_in:
+            st.switch_page("pages/04_upload.py")
+        else:
+            st.session_state["from_cta_button"] = True
+            st.switch_page("pages/02_login.py")
 
 # ── 2. TRUST SIGNAL — angka singkat biar user tahu scope-nya
 c1, c2, c3 = st.columns(3)
