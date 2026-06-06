@@ -35,7 +35,7 @@ is_logged_in = st.session_state.get("logged_in", False)
 
 st.markdown("""
 <div style="background: linear-gradient(135deg, #1a6ec8, #3a9bd5);
-            border-radius: 16px; padding: 2.2rem 2rem 1.8rem; margin-bottom: 1.2rem; text-align:center;">
+            border-radius: 16px; padding: 2.2rem 2rem 1.8rem; margin-bottom: 0rem; text-align:center;">
     <div style="font-size:2.8rem; margin-bottom:0.4rem;">🔬</div>
     <h1 style="margin:0; font-size:2rem; color:white; letter-spacing:-0.5px;">Acnelytics</h1>
     <p style="margin:0.5rem auto 1rem; color:#d0eaff; font-size:1rem; max-width:420px;">
@@ -51,6 +51,8 @@ if st.button("📤 Mulai Deteksi", use_container_width=True, type="primary"):
     else:
         st.session_state["from_cta_button"] = True
         st.switch_page("pages/02_login.py")
+
+st.markdown("<div style='margin-bottom: 1.5rem;'></div>", unsafe_allow_html=True)
 
 # ── 2. TRUST SIGNAL — angka singkat biar user tahu scope-nya
 c1, c2, c3 = st.columns(3)
