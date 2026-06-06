@@ -35,7 +35,7 @@ is_logged_in = st.session_state.get("logged_in", False)
 
 st.markdown("""
 <div style="background: linear-gradient(135deg, #1a6ec8, #3a9bd5);
-            border-radius: 16px; padding: 2.2rem 2rem 1.8rem; margin-bottom: 0rem; text-align:center;">
+            border-radius: 16px; padding: 2.2rem 2rem 1.8rem; margin-bottom: 1rem; text-align:center;">
     <div style="font-size:2.8rem; margin-bottom:0.4rem;">🔬</div>
     <h1 style="margin:0; font-size:2rem; color:white; letter-spacing:-0.5px;">Acnelytics</h1>
     <p style="margin:0.5rem auto 1rem; color:#d0eaff; font-size:1rem; max-width:420px;">
