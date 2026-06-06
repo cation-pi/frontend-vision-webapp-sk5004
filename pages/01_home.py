@@ -23,67 +23,68 @@ is_logged_in = st.session_state.get("logged_in", False)
 
 st.markdown("""
 <style>
+
 .hero-card {
     background: linear-gradient(135deg, #1a6ec8, #3a9bd5);
-    border-radius: 20px;
-    padding: 3rem 2rem 5rem 2rem;
-    margin-bottom: 0;
+    border-radius: 24px;
+    padding: 3rem 2rem;
     text-align: center;
-}
-
-.hero-card h1 {
-    color: white;
-    margin: 0;
-    font-size: 2.4rem;
-}
-
-.hero-card p {
-    color: #dcefff;
-    max-width: 500px;
-    margin: 1rem auto 0;
-    line-height: 1.6;
+    margin-bottom: 1rem;
 }
 
 .hero-icon {
-    font-size: 3rem;
+    font-size: 4rem;
     margin-bottom: 0.5rem;
 }
 
-/* Tombol berada di tengah */
-div[data-testid="stButton"] {
-    display: flex;
-    justify-content: center;
-    margin-top: -3rem;
-    margin-bottom: 2rem;
-    position: relative;
-    z-index: 999;
+.hero-title {
+    color: white;
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
 }
 
-div[data-testid="stButton"] button {
+.hero-desc {
+    color: #dcefff;
+    font-size: 1.2rem;
+    line-height: 1.8;
+    max-width: 650px;
+    margin: 0 auto;
+}
+
+/* Pusatkan tombol */
+div.stButton {
+    text-align: center;
+}
+
+/* Style tombol */
+div.stButton > button {
     border-radius: 999px;
-    background: white;
+    background-color: white;
     color: #1a6ec8;
     border: none;
     font-weight: 600;
-    padding: 0.65rem 2rem;
-    width: auto !important;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    padding: 0.7rem 2rem;
+    width: auto;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
 }
 
-div[data-testid="stButton"] button:hover {
-    background: #f7fbff;
+div.stButton > button:hover {
+    background-color: #f5f9ff;
 }
+
 </style>
 """, unsafe_allow_html=True)
 
+# Card
 st.markdown("""
 <div class="hero-card">
     <div class="hero-icon">🔬</div>
-    <h1>Skin Detect</h1>
-    <p>
+    <div class="hero-title">Skin Detect</div>
+    <div class="hero-desc">
         Upload foto jerawatmu, dan AI kami akan membantu
         mengidentifikasi jenisnya dalam hitungan detik.
-    </p>
+    </div>
 </div>
 """, unsafe_allow_html=True)
 
