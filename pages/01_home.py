@@ -28,7 +28,8 @@ st.markdown("""
 .hero-card {
     background: linear-gradient(135deg, #1a6ec8, #3a9bd5);
     border-radius: 24px;
-    padding: 2.5rem 2rem 5rem 2rem;
+    padding: 2.5rem 2rem 7rem 2rem;
+    border-radius: 24px;
     text-align: center;
 }
 
@@ -59,7 +60,7 @@ st.markdown("""
 div.stButton {
     display: flex;
     justify-content: center;
-    margin-top: -3rem;   /* tarik masuk ke card */
+    margin-top: -5rem;
 }
 
 div.stButton > button {
@@ -96,10 +97,11 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-left, center, right = st.columns([1, 2, 1])
+left, center, right = st.columns([1, 1, 1])
 
 with center:
     if st.button("📤 Mulai Deteksi"):
+        left, center, right = st.columns([2, 1, 2])
         if is_logged_in:
             st.switch_page("pages/04_upload.py")
         else:
