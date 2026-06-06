@@ -21,27 +21,37 @@ is_logged_in = st.session_state.get("logged_in", False)
 # </div>
 # """, unsafe_allow_html=True)
 
+is_logged_in = st.session_state.get("logged_in", False)
+
 st.markdown("""
 <style>
+
+/* Tombol CTA */
 div[data-testid="stButton"] {
     display: flex;
     justify-content: center;
-    margin-top: -3.2rem;
+    margin-top: -2.8rem;
     margin-bottom: 2rem;
     position: relative;
     z-index: 100;
 }
 
 div[data-testid="stButton"] > button {
-    background: white;
-    color: #1a6ec8;
-    border: none;
-    border-radius: 999px;
-    padding: 0.55rem 1.6rem;
-    font-weight: 700;
+    background: white !important;
+    color: #1a6ec8 !important;
+    border: none !important;
+    border-radius: 999px !important;
+    padding: 0.55rem 1.6rem !important;
+    font-weight: 700 !important;
     width: auto !important;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
+
+div[data-testid="stButton"] > button:hover {
+    background: #f7fbff !important;
+    color: #155ca8 !important;
+}
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -50,29 +60,36 @@ st.markdown("""
     background: linear-gradient(135deg, #1a6ec8, #3a9bd5);
     border-radius: 16px;
     padding: 2.2rem 2rem 4.5rem 2rem;
-    margin-bottom: 1.2rem;
+    margin-bottom: 1rem;
     text-align: center;
 ">
-    <div style="font-size:2.8rem; margin-bottom:0.4rem;">🔬</div>
+
+    <div style="
+        font-size: 2.8rem;
+        margin-bottom: 0.4rem;
+    ">
+        🔬
+    </div>
 
     <h1 style="
-        margin:0;
-        font-size:2rem;
-        color:white;
-        letter-spacing:-0.5px;
+        margin: 0;
+        font-size: 2rem;
+        color: white;
+        letter-spacing: -0.5px;
     ">
         Acnelytics
     </h1>
 
     <p style="
-        margin:0.5rem auto 0.3rem;
-        color:#d0eaff;
-        font-size:1rem;
-        max-width:420px;
+        margin: 0.5rem auto 0.3rem;
+        color: #d0eaff;
+        font-size: 1rem;
+        max-width: 420px;
     ">
         Upload foto jerawatmu, dan AI kami akan membantu
         mengidentifikasi jenisnya dalam hitungan detik.
     </p>
+
 </div>
 """, unsafe_allow_html=True)
 
