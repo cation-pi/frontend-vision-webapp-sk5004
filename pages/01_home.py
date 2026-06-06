@@ -6,49 +6,83 @@ apply_global_styles()
 
 # ── 1. HERO — Orientasi pertama: ini apa & mau ngapain
 
+# Tentukan target URL secara dinamis
+is_logged_in = st.session_state.get("logged_in", False)
+
+# st.markdown(f"""
+# <div style="background: linear-gradient(135deg, #1a6ec8, #3a9bd5);
+#             border-radius: 16px; padding: 2.2rem 2rem 1.8rem; margin-bottom: 1.2rem; text-align:center;">
+#     <div style="font-size:2.8rem; margin-bottom:0.4rem;">🔬</div>
+#     <h1 style="margin:0; font-size:2rem; color:white; letter-spacing:-0.5px;">Acnelytics</h1>
+#     <p style="margin:0.5rem auto 0.3rem; color:#d0eaff; font-size:1rem; max-width:420px;">
+#         Upload foto jerawatmu, dan AI kami akan membantu mengidentifikasi jenisnya
+#         dalam hitungan detik.
+#     </p>
+# </div>
+# """, unsafe_allow_html=True)
+
 st.markdown("""
 <style>
-/* Memaksa kontainer tombol Streamlit ke tengah dan menariknya ke atas */
+.hero-card {
+    background: linear-gradient(135deg, #1a6ec8, #3a9bd5);
+    border-radius: 20px;
+    padding: 3rem 2rem 5rem 2rem;
+    margin-bottom: 0;
+    text-align: center;
+}
+
+.hero-card h1 {
+    color: white;
+    margin: 0;
+    font-size: 2.4rem;
+}
+
+.hero-card p {
+    color: #dcefff;
+    max-width: 500px;
+    margin: 1rem auto 0;
+    line-height: 1.6;
+}
+
+.hero-icon {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Tombol berada di tengah */
 div[data-testid="stButton"] {
     display: flex;
     justify-content: center;
-    margin-top: -4.5rem; /* Tarik tombol jauh ke atas MASUK ke dalam card */
+    margin-top: -3rem;
     margin-bottom: 2rem;
     position: relative;
-    z-index: 10;
+    z-index: 999;
 }
 
-/* Desain tombol agar mungil dan melengkung seperti asli */
-div[data-testid="stButton"] > button {
-    background-color: #ffffff;
+div[data-testid="stButton"] button {
+    border-radius: 999px;
+    background: white;
     color: #1a6ec8;
-    border-radius: 30px;
-    font-weight: bold;
     border: none;
-    padding: 0.5rem 1.8rem; /* Ukuran mungil (tidak melebar) */
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    transition: all 0.3s ease;
+    font-weight: 600;
+    padding: 0.65rem 2rem;
+    width: auto !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
-div[data-testid="stButton"] > button:hover {
-    background-color: #f0f8ff;
-    color: #0f5298;
-    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+div[data-testid="stButton"] button:hover {
+    background: #f7fbff;
 }
 </style>
 """, unsafe_allow_html=True)
 
-# Tentukan target URL secara dinamis
-is_logged_in = st.session_state.get("logged_in", False)
-
-st.markdown(f"""
-<div style="background: linear-gradient(135deg, #1a6ec8, #3a9bd5);
-            border-radius: 16px; padding: 2.2rem 2rem 1.8rem; margin-bottom: 1.2rem; text-align:center;">
-    <div style="font-size:2.8rem; margin-bottom:0.4rem;">🔬</div>
-    <h1 style="margin:0; font-size:2rem; color:white; letter-spacing:-0.5px;">Acnelytics</h1>
-    <p style="margin:0.5rem auto 0.3rem; color:#d0eaff; font-size:1rem; max-width:420px;">
-        Upload foto jerawatmu, dan AI kami akan membantu mengidentifikasi jenisnya
-        dalam hitungan detik.
+st.markdown("""
+<div class="hero-card">
+    <div class="hero-icon">🔬</div>
+    <h1>Skin Detect</h1>
+    <p>
+        Upload foto jerawatmu, dan AI kami akan membantu
+        mengidentifikasi jenisnya dalam hitungan detik.
     </p>
 </div>
 """, unsafe_allow_html=True)
