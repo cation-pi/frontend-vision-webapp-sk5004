@@ -74,9 +74,10 @@ st.info("""
 #     help="Hanya JPG, JPEG, PNG — maksimal 5 MB"
 # )
 
-tab1, tab2 = st.tabs(["📁 Unggah dari Galeri", "📸 Ambil dengan Kamera"])
+tab1, tab2 = st.tabs(["📁 Unggah dari Galeri", "📸 Ambil dengan Kamera Web"])
 
 with tab1:
+    st.warning("📱 **Pengguna HP**: Pada menu Upload, mohon pilih gambar dari Galeri/Perpustakaan Foto. Pengambilan foto langsung melalui menu tersebut belum didukung dan dapat menyebabkan proses unggah gagal. Untuk mengambil foto secara langsung dari kamera, gunakan tab 📸 **Kamera Web**.")
     uploaded_file = st.file_uploader(
         "Pilih foto kulit Anda dari galeri",
         type=["jpg", "jpeg", "png"],
@@ -85,6 +86,7 @@ with tab1:
 
 with tab2:
     # st.info("Kamera langsung di browser agar lebih stabil dan tidak reload.")
+    st.info("Kamera stabil di browser. 💡 Pastikan Anda berada di tempat yang terang.")
     camera_file = st.camera_input("Foto langsung wajah Anda")
 
 # Logika OR: ambil mana saja yang diisi oleh pengguna (kamera atau galeri)
