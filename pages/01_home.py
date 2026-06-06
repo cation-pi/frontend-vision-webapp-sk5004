@@ -87,22 +87,9 @@ div[data-testid="stButton"] > button:hover {
 """, unsafe_allow_html=True)
 
 st.markdown("""
-<div class="hero-card">
-
-    <div class="hero-icon">
-        🔬
-    </div>
-
-    <div class="hero-title">
-        Acnelytics
-    </div>
-
-    <div class="hero-desc">
-        Upload foto jerawatmu, dan AI kami akan membantu
-        mengidentifikasi jenisnya dalam hitungan detik.
-    </div>
-
-</div>
+<h1 style="color:red;text-align:center;">
+TEST
+</h1>
 """, unsafe_allow_html=True)
 
 left, center, right = st.columns([1, 1, 1])
