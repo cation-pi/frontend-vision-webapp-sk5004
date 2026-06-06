@@ -8,24 +8,31 @@ apply_global_styles()
 
 st.markdown("""
 <style>
-/* Memodifikasi tombol agar terlihat menempel dengan card */
-div.stButton > button {
+/* Memaksa kontainer tombol Streamlit ke tengah dan menariknya ke atas */
+div[data-testid="stButton"] {
+    display: flex;
+    justify-content: center;
+    margin-top: -4.5rem; /* Tarik tombol jauh ke atas MASUK ke dalam card */
+    margin-bottom: 2rem;
+    position: relative;
+    z-index: 10;
+}
+
+/* Desain tombol agar mungil dan melengkung seperti asli */
+div[data-testid="stButton"] > button {
     background-color: #ffffff;
     color: #1a6ec8;
     border-radius: 30px;
     font-weight: bold;
     border: none;
-    padding: 0.6rem 2rem;
+    padding: 0.5rem 1.8rem; /* Ukuran mungil (tidak melebar) */
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     transition: all 0.3s ease;
-    margin-top: -2rem; /* Menarik tombol ke atas agar menimpa batas bawah kotak biru */
-    position: relative;
-    z-index: 10;
 }
-div.stButton > button:hover {
+
+div[data-testid="stButton"] > button:hover {
     background-color: #f0f8ff;
     color: #0f5298;
-    border-color: transparent;
     box-shadow: 0 6px 12px rgba(0,0,0,0.15);
 }
 </style>
@@ -46,15 +53,12 @@ st.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
-col1, col2, col3 = st.columns([1, 2, 1])
-with col2:
-    if st.button("📤 Mulai Deteksi", use_container_width=True):
-        if is_logged_in:
-            st.switch_page("pages/04_upload.py")
-        else:
-            # Titipkan pesan cta ke dalam session_state sebagai pengganti ?cta=true
-            st.session_state["from_cta_button"] = True
-            st.switch_page("pages/02_login.py")
+if st.button("📥 Mulai Deteksi", use_container_width=False):
+    if is_logged_in:
+        st.switch_page("pages/04_upload.py")
+    else:
+        st.session_state["from_cta_button"] = True
+        st.switch_page("pages/02_login.py")
 
 # ── 2. TRUST SIGNAL — angka singkat biar user tahu scope-nya
 c1, c2, c3 = st.columns(3)
