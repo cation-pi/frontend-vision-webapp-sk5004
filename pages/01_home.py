@@ -23,76 +23,60 @@ is_logged_in = st.session_state.get("logged_in", False)
 
 st.markdown("""
 <style>
-
-/* HERO CARD */
-.hero-card {
-    background: linear-gradient(135deg, #1a6ec8, #3a9bd5);
-    border-radius: 20px;
-    padding: 2.8rem 2rem 6rem 2rem;
-    text-align: center;
-}
-
-/* ICON */
-.hero-icon {
-    font-size: 3.2rem;
-    margin-bottom: 0.6rem;
-}
-
-/* JUDUL */
-.hero-title {
-    color: white;
-    font-size: 3rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-}
-
-/* DESKRIPSI */
-.hero-desc {
-    color: #dcefff;
-    font-size: 1.1rem;
-    line-height: 1.8;
-    max-width: 650px;
-    margin: auto;
-}
-
-/* CONTAINER TOMBOL */
 div[data-testid="stButton"] {
     display: flex;
     justify-content: center;
-    margin-top: -4rem;
-    margin-bottom: 1rem;
+    margin-top: -3.2rem;
+    margin-bottom: 2rem;
     position: relative;
-    z-index: 10;
+    z-index: 100;
 }
 
-/* TOMBOL */
 div[data-testid="stButton"] > button {
     background: white;
     color: #1a6ec8;
     border: none;
     border-radius: 999px;
-    padding: 0.7rem 2rem;
+    padding: 0.55rem 1.6rem;
     font-weight: 700;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     width: auto !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
-
-/* HOVER */
-div[data-testid="stButton"] > button:hover {
-    background: #f7fbff;
-    color: #155ca8;
-}
-
 </style>
 """, unsafe_allow_html=True)
 
 st.markdown("""
-<h1 style="color:red;text-align:center;">
-TEST
-</h1>
+<div style="
+    background: linear-gradient(135deg, #1a6ec8, #3a9bd5);
+    border-radius: 16px;
+    padding: 2.2rem 2rem 4.5rem 2rem;
+    margin-bottom: 1.2rem;
+    text-align: center;
+">
+    <div style="font-size:2.8rem; margin-bottom:0.4rem;">🔬</div>
+
+    <h1 style="
+        margin:0;
+        font-size:2rem;
+        color:white;
+        letter-spacing:-0.5px;
+    ">
+        Acnelytics
+    </h1>
+
+    <p style="
+        margin:0.5rem auto 0.3rem;
+        color:#d0eaff;
+        font-size:1rem;
+        max-width:420px;
+    ">
+        Upload foto jerawatmu, dan AI kami akan membantu
+        mengidentifikasi jenisnya dalam hitungan detik.
+    </p>
+</div>
 """, unsafe_allow_html=True)
 
-left, center, right = st.columns([1, 1, 1])
+left, center, right = st.columns([1,1,1])
 
 with center:
     if st.button("📤 Mulai Deteksi"):
