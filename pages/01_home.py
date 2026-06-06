@@ -6,6 +6,31 @@ apply_global_styles()
 
 # ── 1. HERO — Orientasi pertama: ini apa & mau ngapain
 
+st.markdown("""
+<style>
+/* Memodifikasi tombol agar terlihat menempel dengan card */
+div.stButton > button {
+    background-color: #ffffff;
+    color: #1a6ec8;
+    border-radius: 30px;
+    font-weight: bold;
+    border: none;
+    padding: 0.6rem 2rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    margin-top: -2rem; /* Menarik tombol ke atas agar menimpa batas bawah kotak biru */
+    position: relative;
+    z-index: 10;
+}
+div.stButton > button:hover {
+    background-color: #f0f8ff;
+    color: #0f5298;
+    border-color: transparent;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+</style>
+""", unsafe_allow_html=True)
+
 # Tentukan target URL secara dinamis
 is_logged_in = st.session_state.get("logged_in", False)
 
