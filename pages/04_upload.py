@@ -84,7 +84,7 @@ with tab1:
     )
 
 with tab2:
-    st.info("Kamera langsung di browser agar lebih stabil dan tidak reload.")
+    # st.info("Kamera langsung di browser agar lebih stabil dan tidak reload.")
     camera_file = st.camera_input("Foto langsung wajah Anda")
 
 # Logika OR: ambil mana saja yang diisi oleh pengguna (kamera atau galeri)
