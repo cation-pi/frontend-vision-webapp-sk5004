@@ -21,40 +21,6 @@ is_logged_in = st.session_state.get("logged_in", False)
 # </div>
 # """, unsafe_allow_html=True)
 
-is_logged_in = st.session_state.get("logged_in", False)
-
-st.markdown("""
-<style>
-
-/* Tombol CTA */
-div[data-testid="stButton"] {
-    display: flex;
-    justify-content: center;
-    margin-top: -2.8rem;
-    margin-bottom: 2rem;
-    position: relative;
-    z-index: 100;
-}
-
-div[data-testid="stButton"] > button {
-    background: white !important;
-    color: #1a6ec8 !important;
-    border: none !important;
-    border-radius: 999px !important;
-    padding: 0.55rem 1.6rem !important;
-    font-weight: 700 !important;
-    width: auto !important;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-}
-
-div[data-testid="stButton"] > button:hover {
-    background: #f7fbff !important;
-    color: #155ca8 !important;
-}
-
-</style>
-""", unsafe_allow_html=True)
-
 st.markdown("""
 <div style="
     background: linear-gradient(135deg, #1a6ec8, #3a9bd5);
@@ -92,16 +58,6 @@ st.markdown("""
 
 </div>
 """, unsafe_allow_html=True)
-
-left, center, right = st.columns([1,1,1])
-
-with center:
-    if st.button("📤 Mulai Deteksi"):
-        if is_logged_in:
-            st.switch_page("pages/04_upload.py")
-        else:
-            st.session_state["from_cta_button"] = True
-            st.switch_page("pages/02_login.py")
 
 # ── 2. TRUST SIGNAL — angka singkat biar user tahu scope-nya
 c1, c2, c3 = st.columns(3)
