@@ -9,6 +9,12 @@ apply_global_styles()
 # Tentukan status login
 is_logged_in = st.session_state.get("logged_in", False)
 
+# if is_logged_in:
+#     target_url = "/upload" 
+# else:
+#     # Kirim sinyal cta=true agar halaman login tau user datang dari tombol ini
+#     target_url = "/login?cta=true"
+
 # st.markdown(f"""
 # <div style="background: linear-gradient(135deg, #1a6ec8, #3a9bd5);
 #             border-radius: 16px; padding: 2.2rem 2rem 1.8rem; margin-bottom: 1.2rem; text-align:center;">
@@ -18,6 +24,12 @@ is_logged_in = st.session_state.get("logged_in", False)
 #         Upload foto jerawatmu, dan AI kami akan membantu mengidentifikasi jenisnya
 #         dalam hitungan detik.
 #     </p>
+#     <br>
+#     <a href="{target_url}" target="_self"
+#        style="display:inline-block; background:white; color:#1a6ec8; font-weight:700;
+#               padding:0.55rem 1.6rem; border-radius:999px; text-decoration:none; font-size:0.95rem;">
+#         📤 Mulai Deteksi
+#     </a>
 # </div>
 # """, unsafe_allow_html=True)
 
@@ -33,15 +45,12 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-col1, col2, col3 = st.columns([1, 2, 1])
-with col2:
-    if st.button("📤 Mulai Deteksi", use_container_width=True):
-        if is_logged_in:
-            st.switch_page("pages/04_upload.py")
-        else:
-            # Titipkan pesan cta ke dalam session_state sebagai pengganti ?cta=true
-            st.session_state["from_cta_button"] = True
-            st.switch_page("pages/02_login.py")
+if st.button("📤 Mulai Deteksi", use_container_width=True, type="primary"):
+    if is_logged_in:
+        st.switch_page("pages/04_upload.py")
+    else:
+        st.session_state["from_cta_button"] = True
+        st.switch_page("pages/02_login.py")
 
 # ── 2. TRUST SIGNAL — angka singkat biar user tahu scope-nya
 c1, c2, c3 = st.columns(3)
