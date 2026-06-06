@@ -24,22 +24,21 @@ is_logged_in = st.session_state.get("logged_in", False)
 st.markdown("""
 <style>
 
-/* Hero Card */
+/* HERO CARD */
 .hero-card {
     background: linear-gradient(135deg, #1a6ec8, #3a9bd5);
-    border-radius: 24px;
-    padding: 2.5rem 2rem 7rem 2rem;
-    border-radius: 24px;
+    border-radius: 20px;
+    padding: 2.8rem 2rem 6rem 2rem;
     text-align: center;
 }
 
-/* Icon */
+/* ICON */
 .hero-icon {
-    font-size: 3.5rem;
-    margin-bottom: 0.5rem;
+    font-size: 3.2rem;
+    margin-bottom: 0.6rem;
 }
 
-/* Judul */
+/* JUDUL */
 .hero-title {
     color: white;
     font-size: 3rem;
@@ -47,23 +46,27 @@ st.markdown("""
     margin-bottom: 1rem;
 }
 
-/* Deskripsi */
+/* DESKRIPSI */
 .hero-desc {
     color: #dcefff;
-    font-size: 1.15rem;
+    font-size: 1.1rem;
     line-height: 1.8;
     max-width: 650px;
     margin: auto;
 }
 
-/* Tombol */
-div.stButton {
+/* CONTAINER TOMBOL */
+div[data-testid="stButton"] {
     display: flex;
     justify-content: center;
-    margin-top: -5rem;
+    margin-top: -4rem;
+    margin-bottom: 1rem;
+    position: relative;
+    z-index: 10;
 }
 
-div.stButton > button {
+/* TOMBOL */
+div[data-testid="stButton"] > button {
     background: white;
     color: #1a6ec8;
     border: none;
@@ -71,10 +74,11 @@ div.stButton > button {
     padding: 0.7rem 2rem;
     font-weight: 700;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    width: auto;
+    width: auto !important;
 }
 
-div.stButton > button:hover {
+/* HOVER */
+div[data-testid="stButton"] > button:hover {
     background: #f7fbff;
     color: #155ca8;
 }
@@ -84,7 +88,10 @@ div.stButton > button:hover {
 
 st.markdown("""
 <div class="hero-card">
-    <div class="hero-icon">🔬</div>
+
+    <div class="hero-icon">
+        🔬
+    </div>
 
     <div class="hero-title">
         Acnelytics
@@ -94,6 +101,7 @@ st.markdown("""
         Upload foto jerawatmu, dan AI kami akan membantu
         mengidentifikasi jenisnya dalam hitungan detik.
     </div>
+
 </div>
 """, unsafe_allow_html=True)
 
@@ -101,7 +109,6 @@ left, center, right = st.columns([1, 1, 1])
 
 with center:
     if st.button("📤 Mulai Deteksi"):
-        left, center, right = st.columns([2, 1, 2])
         if is_logged_in:
             st.switch_page("pages/04_upload.py")
         else:
